@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>Your result</title>
+      
+      <link
+         rel="stylesheet"
+         href="{{url_for('static', filename='css/global.css')}}"
+         />
+      <link
+         rel="stylesheet"
+         href="{{url_for('static', filename='css/style.css')}}"
+         />
+      <link
+      rel="stylesheet"
+      href="{{url_for('static', filename='css/styles.css')}}"
+      />
+   </head>
+   <body>
+      <div class="navigation">
+         <a href=".">Return to home</a>
+      </div>
+      <center>
+      
+<nav class="nav">
+    <menu class="filter">
+      <menuitem id="demo1">
+        <a>Filter by Genre</a>
+        <menu>
+        
+         <menuitem>
+         <a class="isekai">Isekai</a>
+         </menuitem>
+         
+               <menuitem>
+                  <a class="romance">Romance</a>
+               </menuitem>
+          <menuitem><a class="action">Action</a></menuitem>
+          <menuitem><a class="shounen">Shounen</a></menuitem>
+          <menuitem><a class="seinen">Seinen</a></menuitem>
+          <menuitem><a class="adventure">Adventure</a></menuitem>
+
+        </menu>
+      </menuitem>
+      <menuitem id="demo1">
+      <a>Filter by Age Group</a>
+      <menu>
+        <menuitem><a class="pgthirteen">PG-13</a></menuitem>
+        <menuitem><a class="rplus">R+</a></menuitem>
+        <menuitem><a class="r">R</a></menuitem>
+        <menuitem><a class="pg">PG</a></menuitem>
+
+      </menu>
+    </menuitem>
+    <menuitem id="demo1">
+      <a>Filter by Release Year</a>
+      <menu>
+        <menuitem><a class="yearone">2018-Current</a></menuitem>
+             <menuitem>
+                <a class="yeartwo">2012-2017</a>
+             </menuitem>
+        <menuitem><a class="yearthree">2005-2011</a></menuitem>
+        <menuitem><a class="yearfour">2000-2004</a></menuitem>
+        <menuitem><a class="yearfive">1990-1999</a></menuitem>
+
+      </menu>
+    </menuitem>
+    </menu>
+  </nav>
+</center>
+
+      <div class="container">
+         <div class="recommendations">
+            <h2 class="recommendations_header">
+            Your recommendation based on what you searched</h3>
+            <div class="recommendation_list">
+              {% if data %}
+              {% if 3 > data|length %}
+                  {% set batch_size = 1%}
+              {% elif 12 > data|length %}
+                  {% if data|length % 3 == 0 %}
+                     {% set batch_size = data|length // 3%}
+                  {% else %}
+                     {% set batch_size = data|length // 3 + 1%}
+                  {% endif %}
+                     
+               {% else %}
+                  {% set batch_size = 4%}
+               
+              {% endif %}
+              {% for row in data[:12]|batch(batch_size) %}
+              <div class="columns">
+               {% for column in row %}
+               {% if column[0]|length > 31 %}
+                  {% set class = "padding2"%}
+               {% else %}
+                  {% set class = "padding1"%}
+
+               {% endif %}
+               <div class="column">
+                  
+                   <img src="{{ column[1] }}"><br>
+                   <a class="anime-name" href="https://myanimelist.net/anime/{{ column[-1] }}">{{ column[0] }}</a>
+                   <p class="{{ class }}">{{ column[6] }}</p>
+               </div>
+               {% endfor %}
+               </div>
+               
+               {% endfor %}
+              {% endif %}
+
+              {% if not data %}
+              <div class="no_content">
+                <p class="no_content_paragraph">There are no movies matched the search query :(</p>
+              </div>
+              {% endif %}
+            </div>
+         </div>
+      </div>
+      <script>
+         var elem1 = document.querySelector('.isekai')
+elem1.addEventListener('click', () => {
+    window.location.href = '/filter/isekai'
+})
+
+var elem2 = document.querySelector('.romance')
+elem2.addEventListener('click', () => {
+    window.location.href = '/filter/romance'
+})
+
+var elem3 = document.querySelector('.action')
+elem3.addEventListener('click', () => {
+    window.location.href = '/filter/action' 
+})
+
+var elem4 = document.querySelector('.shounen')
+elem4.addEventListener('click', () => {
+    window.location.href = '/filter/shounen'
+})
+
+var elem5 = document.querySelector('.seinen')
+elem5.addEventListener('click', () => {
+    window.location.href = '/filter/seinen'
+})
+
+var elem6 = document.querySelector('.adventure')
+elem6.addEventListener('click', () => {
+    window.location.href = '/filter/adventure'
+})
+
+var elem7 = document.querySelector('.pgthirteen')
+elem7.addEventListener('click', () => {
+    window.location.href = '/filter/pg-13'
+})
+
+var elem8 = document.querySelector('.rplus')
+elem8.addEventListener('click', () => {
+    window.location.href = '/filter/r+'
+})
+
+var elem9 = document.querySelector('.r')
+elem9.addEventListener('click', () => {
+    window.location.href = '/filter/r'
+})
+
+var elem10 = document.querySelector('.pg')
+elem10.addEventListener('click', () => {
+    window.location.href = '/filter/pg'
+})
+
+var elem11 = document.querySelector('.yearone')
+elem11.addEventListener('click', () => {
+    window.location.href = '/filter/2018-current'
+})
+
+var elem12 = document.querySelector('.yeartwo')
+elem12.addEventListener('click', () => {
+    window.location.href = '/filter/2012-2017'
+})
+
+var elem13 = document.querySelector('.yearthree')
+elem13.addEventListener('click', () => {
+    window.location.href = '/filter/2005-2011'
+})
+
+var elem14 = document.querySelector('.yearfour')
+elem14.addEventListener('click', () => {
+    window.location.href = '/filter/2000-2004'
+})
+
+var elem15 = document.querySelector('.yearfive')
+elem15.addEventListener('click', () => {
+    window.location.href = '/filter/1990-1999'
+})
+
+
+        document.addEventListener('click', e => {
+          if (!e.target.closest('.card')) return
+
+          const card = e.target.closest('.card')
+          const link = card.dataset.redirect
+
+          window.open(`https://www.google.com/search?q=${link}`, "_blank")
+        })
+      </script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> 
+      <script src="{{url_for('static', filename='js/index.js')}}"></script>
+   </body>
+</html>
+

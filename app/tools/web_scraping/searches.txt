@@ -1,0 +1,35 @@
+# {% for name, img_url, duration, year, genres, age_rating, rating, url in data[:10] %} -->
+<div class="row small-row">
+<div class="col-lg-3 col-md-2">
+    <img src="{{ img_url }}">
+    <a href="{{ url }}">{{ name }}</a>
+    <p class='padded-p'>{{ rating }}</p>
+</div>
+
+<div class="col-lg-3 col-md-2">
+    <i class="i-special fa-solid fa-bullseye"></i>
+    <h3>Hot Searches</h3>
+    <p class="padded-p">We have all the dogs, the greatest dogs.</p>
+</div>
+
+<div class="col-lg-3 col-md-2">
+    <i class="i-special fa-solid fa-heart"></i>
+    <h3>Why Shows4U</h3>
+    <p class="padded-p">The only website that is ultra-personalized for you</p>
+</div>
+
+</div>
+
+
+
+<div class="card" data-redirect="{{ title[0] }}">
+                  <!-- <img
+                     class="card_image"
+                     src="#"
+                     alt="An image of the actual movie"
+                     /> -->
+                  <div class="card_info">
+                     <h3 class="card_header">{{ title }}</h3>
+                     <p class="card_description">{{ title }}</p>
+                  </div>
+               </div>
