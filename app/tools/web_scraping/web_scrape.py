@@ -1,7 +1,7 @@
 import requests
 import bs4
 # from concurrent.futures import as_completed
-# from requests_futures import sessions
+from requests_futures import sessions
 from .validation_database import movies_db, anime_db, tvshows_db
 import sqlite3
 from time import time
