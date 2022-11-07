@@ -1,7 +1,7 @@
 import requests
 import bs4
-from concurrent.futures import as_completed
-from requests_futures import sessions
+# from concurrent.futures import as_completed
+# from requests_futures import sessions
 from .validation_database import movies_db, anime_db, tvshows_db
 import sqlite3
 from time import time
@@ -320,7 +320,7 @@ def scrapeUrls(sites):
 
 def scrapeUrlsv2(sites):
     start = time()
-    data = set()
+    data = {'one piece'}
     headers = requests.utils.default_headers()
 
     headers.update(
@@ -329,50 +329,51 @@ def scrapeUrlsv2(sites):
         }
     )
 
-    with sessions.FuturesSession() as session:
+    # with sessions.FuturesSession() as session:
         
-        futures = [session.get(site, headers=headers) for site in sites]
+    #     futures = [session.get(site, headers=headers) for site in sites]
         
-        for future in as_completed(futures):
-            try:
-                resp = future.result()
-            except:
+    #     for future in as_completed(futures):
+    #         try:
+    #             resp = future.result()
+    #         except:
                 
-                continue
-            site = str(resp.url)
-            soup = bs4.BeautifulSoup(resp.text, 'lxml')
+    #             continue
+    #         site = str(resp.url)
+    #         soup = bs4.BeautifulSoup(resp.text, 'lxml')
             
-            cur_data = testing_final(soup, site)
-            if cur_data:
+    #         cur_data = testing_final(soup, site)
+    #         if cur_data:
                 
-                for j in cur_data:
-                    res = clean_name(j)
+    #             for j in cur_data:
+    #                 res = clean_name(j)
                   
-                    if res:
-                        data.add(res)
+    #                 if res:
+    #                     data.add(res)
             # else:
             #     print(site)
         
-        final = []
-        conn = sqlite3.connect('titles.db')
-        cursor = conn.cursor()
-        
-        
-        for name in data:
-            cursor.execute(f'''SELECT * FROM ANIME WHERE name = "{name}"''')
-            cur = cursor.fetchone()
-            try:
-                final.append((titleize(cur[0]),) + cur[1:])
-                
-                with open(f'app/tools/web_scraping/chosen_anime.txt', 'a') as f:
+    final = []
+    conn = sqlite3.connect('titles.db')
+    cursor = conn.cursor()
+    
+    
+    for name in data:
+        cursor.execute(f'''SELECT * FROM ANIME WHERE name = "{name}"''')
+        cur = cursor.fetchone()
+        print(cur)
+        try:
+            final.append((titleize(cur[0]),) + cur[1:])
+            
+            with open(f'app/tools/web_scraping/chosen_anime.txt', 'a') as f:
 
-                    f.write(f'{cur[0]}!|?')
-                    f.close()
-            except:
-                print(name)
-                print(data)
-        print(time() - start, 10 * '\n')
-        return final
+                f.write(f'{cur[0]}!|?')
+                f.close()
+        except:
+            print(name)
+            print(data)
+    print(time() - start, 10 * '\n')
+    return final
 
 # def scrapeUrls(sites):
 #     start = time()
