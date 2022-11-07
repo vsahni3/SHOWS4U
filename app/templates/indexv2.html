@@ -113,7 +113,7 @@
            {% for row in data[1]|batch(2) %}
            <div class="columns">
             {% for column in row %}
-            {% if column[0]|length > 32 %}
+            {% if column[0]|length > 29 %}
                {% set class = "padding2"%}
             {% else %}
                {% set class = "padding1"%}

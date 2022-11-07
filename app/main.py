@@ -1,7 +1,6 @@
 from flask import Flask, render_template, request
 from .tools.web_scraping import get_urls
 from .tools.web_scraping import web_scrape
-from .tools.web_scraping import web_scrape
 from time import time
 
 
