@@ -6,8 +6,7 @@ from concurrent.futures import as_completed
 from requests_futures import sessions
 import json
 import sqlite3
-# import mysql.connector
-import getpass
+
 
 letter_map = {224: 97, 225: 97, 226: 97, 227: 97, 228: 97, 229: 97, 231: 99, 232: 101, 233: 101, 234: 101, 235: 101, 236: 105, 237: 105, 238: 105, 239: 105, 240: 111, 241: 110, 242: 111, 243: 111, 244: 111, 245: 111, 246: 111, 248: 111, 249: 117, 250: 117, 251: 117, 252: 117, 253: 121, 255: 121}
 
@@ -1102,11 +1101,17 @@ def sqlite_mal(start:str, stop:str):
 
 # conn = sqlite3.connect('titles.db')
 # cursor = conn.cursor()
-# name = input().lower()
-# cursor.execute(f'''SELECT * FROM ANIME WHERE name LIKE "{name}"''')
-# cursor.execute(f'''SELECT * FROM ANIME''')
+# name = 'Seven Mortal Sins: This is Indeed the Work of Demons...'.lower()
+# cursor.execute(f'''SELECT * FROM ANIME WHERE name LIKE"{name}"''')
 # data = cursor.fetchall()
 # print(data)
+def update_anime(name, type, change):
+    conn = sqlite3.connect('titles.db')
+    cursor = conn.cursor()
+    cursor.execute(f'UPDATE anime SET "{type}" = "{change}" WHERE name = "{name}"')
+    conn.commit()
+
+
 # for i in data:
 #     if not i[3].isdigit():
 #         print(i, i[3], sep='\n')
@@ -1193,3 +1198,5 @@ def sqlite_mal(start:str, stop:str):
 # # #     total += (time() - start)
 # # #     # mydb.commit()
 # # # print(total / 20)
+
+

@@ -5,7 +5,7 @@
       <meta http-equiv="X-UA-Compatible" content="IE=edge" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Your result</title>
-      
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
       <link
          rel="stylesheet"
          href="{{url_for('static', filename='css/global.css')}}"
@@ -18,11 +18,24 @@
       rel="stylesheet"
       href="{{url_for('static', filename='css/styles.css')}}"
       />
-   </head>
+      
+     
    <body>
-      <div class="navigation">
-         <a href=".">Return to home</a>
-      </div>
+    
+      <div class="pos-f-t">
+         <div class="collapse" id="navbarToggleExternalContent">
+           <div class="bg-primary p-4">
+             <a class="nav-link nav-queries navbar-brand nav2" href="/">Home</a><br>
+             <a class="nav-link nav-queries navbar-brand nav2" href="/result">Results</a>
+           </div>
+         </div>
+         <nav class="navbar navbar-dark bg-primary">
+           <button class="navbar-toggler my-btn" type="button" data-toggle="collapse" data-target="#navbarToggleExternalContent" aria-controls="navbarToggleExternalContent" aria-expanded="false" aria-label="Toggle navigation">
+             <span class="navbar-toggler-icon"></span>
+           </button>
+         </nav>
+       </div>
+      
       <center>
       
 <nav class="nav">
@@ -32,39 +45,39 @@
         <menu>
         
          <menuitem>
-         <a class="isekai">Isekai</a>
+         <a class="isekai genre">Isekai</a>
          </menuitem>
          
                <menuitem>
-                  <a class="romance">Romance</a>
+                  <a class="romance genre">Romance</a>
                </menuitem>
-          <menuitem><a class="action">Action</a></menuitem>
-          <menuitem><a class="shounen">Shounen</a></menuitem>
-          <menuitem><a class="seinen">Seinen</a></menuitem>
-          <menuitem><a class="adventure">Adventure</a></menuitem>
+          <menuitem><a class="action genre">Action</a></menuitem>
+          <menuitem><a class="shounen genre">Shounen</a></menuitem>
+          <menuitem><a class="seinen genre">Seinen</a></menuitem>
+          <menuitem><a class="adventure genre">Adventure</a></menuitem>
 
         </menu>
       </menuitem>
       <menuitem id="demo1">
       <a>Filter by Age Group</a>
       <menu>
-        <menuitem><a class="pgthirteen">PG-13</a></menuitem>
-        <menuitem><a class="rplus">R+</a></menuitem>
-        <menuitem><a class="r">R</a></menuitem>
-        <menuitem><a class="pg">PG</a></menuitem>
+        <menuitem><a class="pgthirteen genre">PG-13</a></menuitem>
+        <menuitem><a class="rplus genre">R+</a></menuitem>
+        <menuitem><a class="r genre">R</a></menuitem>
+        <menuitem><a class="pg genre">PG</a></menuitem>
 
       </menu>
     </menuitem>
     <menuitem id="demo1">
       <a>Filter by Release Year</a>
       <menu>
-        <menuitem><a class="yearone">2018-Current</a></menuitem>
+        <menuitem><a class="yearone genre">2018-Current</a></menuitem>
              <menuitem>
-                <a class="yeartwo">2012-2017</a>
+                <a class="yeartwo genre">2012-2017</a>
              </menuitem>
-        <menuitem><a class="yearthree">2005-2011</a></menuitem>
-        <menuitem><a class="yearfour">2000-2004</a></menuitem>
-        <menuitem><a class="yearfive">1990-1999</a></menuitem>
+        <menuitem><a class="yearthree genre">2005-2011</a></menuitem>
+        <menuitem><a class="yearfour genre">2000-2004</a></menuitem>
+        <menuitem><a class="yearfive genre">1990-1999</a></menuitem>
 
       </menu>
     </menuitem>
@@ -94,16 +107,17 @@
               {% for row in data[:12]|batch(batch_size) %}
               <div class="columns">
                {% for column in row %}
-               {% if column[0]|length > 31 %}
+               {% if column[6]|length == 0 %}
+                  {% set class = "padding3"%}
+               {% elif column[0]|length > 29 %}
                   {% set class = "padding2"%}
                {% else %}
                   {% set class = "padding1"%}
 
                {% endif %}
                <div class="column">
-                  
-                   <img src="{{ column[1] }}"><br>
-                   <a class="anime-name" href="https://myanimelist.net/anime/{{ column[-1] }}">{{ column[0] }}</a>
+                   <img class="special-img" src="{{ column[1] }}"><br>
+                   <a class="anime-name nav-link" href="https://myanimelist.net/anime/{{ column[-1] }}">{{ column[0] }}</a>
                    <p class="{{ class }}">{{ column[6] }}</p>
                </div>
                {% endfor %}
@@ -114,87 +128,95 @@
 
               {% if not data %}
               <div class="no_content">
-                <p class="no_content_paragraph">There are no movies matched the search query :(</p>
+                <p class="no_content_paragraph">There are no movies that matched the search query :(</p>
               </div>
               {% endif %}
             </div>
          </div>
       </div>
       <script>
-         var elem1 = document.querySelector('.isekai')
-elem1.addEventListener('click', () => {
-    window.location.href = '/filter/isekai'
+var elems = document.querySelectorAll('.genre') 
+for (var i = 0; i < elems.length; i++) {
+  elems[i].addEventListener('click', function() {
+    var btn = this.innerHTML
+    window.location.href = '/filter/'.concat(btn.toLowerCase())
 })
 
-var elem2 = document.querySelector('.romance')
-elem2.addEventListener('click', () => {
-    window.location.href = '/filter/romance'
-})
+}
+// var elem1 = document.querySelector('.isekai')
+// elem1.addEventListener('click', () => {
+//     window.location.href = '/filter/isekai'
+// })
 
-var elem3 = document.querySelector('.action')
-elem3.addEventListener('click', () => {
-    window.location.href = '/filter/action' 
-})
+// var elem2 = document.querySelector('.romance')
+// elem2.addEventListener('click', () => {
+//     window.location.href = '/filter/romance'
+// })
 
-var elem4 = document.querySelector('.shounen')
-elem4.addEventListener('click', () => {
-    window.location.href = '/filter/shounen'
-})
+// var elem3 = document.querySelector('.action')
+// elem3.addEventListener('click', () => {
+//     window.location.href = '/filter/action' 
+// })
 
-var elem5 = document.querySelector('.seinen')
-elem5.addEventListener('click', () => {
-    window.location.href = '/filter/seinen'
-})
+// var elem4 = document.querySelector('.shounen')
+// elem4.addEventListener('click', () => {
+//     window.location.href = '/filter/shounen'
+// })
 
-var elem6 = document.querySelector('.adventure')
-elem6.addEventListener('click', () => {
-    window.location.href = '/filter/adventure'
-})
+// var elem5 = document.querySelector('.seinen')
+// elem5.addEventListener('click', () => {
+//     window.location.href = '/filter/seinen'
+// })
 
-var elem7 = document.querySelector('.pgthirteen')
-elem7.addEventListener('click', () => {
-    window.location.href = '/filter/pg-13'
-})
+// var elem6 = document.querySelector('.adventure')
+// elem6.addEventListener('click', () => {
+//     window.location.href = '/filter/adventure'
+// })
 
-var elem8 = document.querySelector('.rplus')
-elem8.addEventListener('click', () => {
-    window.location.href = '/filter/r+'
-})
+// var elem7 = document.querySelector('.pgthirteen')
+// elem7.addEventListener('click', () => {
+//     window.location.href = '/filter/pg-13'
+// })
 
-var elem9 = document.querySelector('.r')
-elem9.addEventListener('click', () => {
-    window.location.href = '/filter/r'
-})
+// var elem8 = document.querySelector('.rplus')
+// elem8.addEventListener('click', () => {
+//     window.location.href = '/filter/r+'
+// })
 
-var elem10 = document.querySelector('.pg')
-elem10.addEventListener('click', () => {
-    window.location.href = '/filter/pg'
-})
+// var elem9 = document.querySelector('.r')
+// elem9.addEventListener('click', () => {
+//     window.location.href = '/filter/r'
+// })
 
-var elem11 = document.querySelector('.yearone')
-elem11.addEventListener('click', () => {
-    window.location.href = '/filter/2018-current'
-})
+// var elem10 = document.querySelector('.pg')
+// elem10.addEventListener('click', () => {
+//     window.location.href = '/filter/pg'
+// })
 
-var elem12 = document.querySelector('.yeartwo')
-elem12.addEventListener('click', () => {
-    window.location.href = '/filter/2012-2017'
-})
+// var elem11 = document.querySelector('.yearone')
+// elem11.addEventListener('click', () => {
+//     window.location.href = '/filter/2018-current'
+// })
 
-var elem13 = document.querySelector('.yearthree')
-elem13.addEventListener('click', () => {
-    window.location.href = '/filter/2005-2011'
-})
+// var elem12 = document.querySelector('.yeartwo')
+// elem12.addEventListener('click', () => {
+//     window.location.href = '/filter/2012-2017'
+// })
 
-var elem14 = document.querySelector('.yearfour')
-elem14.addEventListener('click', () => {
-    window.location.href = '/filter/2000-2004'
-})
+// var elem13 = document.querySelector('.yearthree')
+// elem13.addEventListener('click', () => {
+//     window.location.href = '/filter/2005-2011'
+// })
 
-var elem15 = document.querySelector('.yearfive')
-elem15.addEventListener('click', () => {
-    window.location.href = '/filter/1990-1999'
-})
+// var elem14 = document.querySelector('.yearfour')
+// elem14.addEventListener('click', () => {
+//     window.location.href = '/filter/2000-2004'
+// })
+
+// var elem15 = document.querySelector('.yearfive')
+// elem15.addEventListener('click', () => {
+//     window.location.href = '/filter/1990-1999'
+// })
 
 
         document.addEventListener('click', e => {
@@ -208,6 +230,10 @@ elem15.addEventListener('click', () => {
       </script>
       <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script> 
       <script src="{{url_for('static', filename='js/index.js')}}"></script>
+      <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
    </body>
 </html>
 

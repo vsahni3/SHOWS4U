@@ -1,13 +1,19 @@
 h1, .padded-h {
-  font-family: 'Ubuntu', 'sans-serif';
+  font-family: 'Oswald', sans-serif;
   font-size: 4rem;
   line-height: 1.5;
   font-weight: 900;
   padding-top: 5%;
 }
 
+/* h1, h2, h3, h4, h5, h6 {
+  font-family: "Montserrat-Bold";
+} */
+
+
 body {
-  font-family: 'Montserrat', 'sans-serif';
+  font-family: "Ubuntu";
+  text-align: center;
 }
 
 #title {
@@ -15,7 +21,7 @@ body {
 }
 
 .colored-section {
-  background-color: #00DDFF;
+  background-color: #3498DB;
   color: #fff;
 }
 
@@ -210,10 +216,17 @@ a {
   font-weight: bold !important;
 }
 
-img {
+.special-img {
   border-radius: 8%;
   height: 375px;
   width: 260px;
+}
+
+.reg-img {
+  border-radius: 8%;
+  height: 375px;
+  width: 260px;
+
 }
 
 .anime-name {
@@ -225,12 +238,38 @@ img {
   text-overflow: ellipsis;
 }
 
+.cust-anime-name {
+  padding-left: 10px;
+  width: 30ch;
+  display: block;
+  overflow: hidden;
+  text-align: center;
+  text-overflow: ellipsis;
+  display: block;
+  font-size: 18px;
+  color: var(--bs-nav-link-color);
+  text-decoration: none;
+  transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+  
+}
+
+
+
+.cust-anime-name:hover {
+  color: #0E4399;
+
+}
+
 .padding1 {
   padding-bottom: 70px;
 }
 
 .padding2 {
-  padding-bottom: 48px;
+  padding-bottom: 45px;
+}
+
+.padding3 {
+  padding-bottom: 82px;
 }
 
 /* .anime-display {
@@ -278,7 +317,7 @@ nav > menu > menuitem menuitem menu {
 }
 
 .nav a {
-   background:#75F;
+   background:#000033;
    color:#FFF;
    min-width:190px;
    transition: background 0.5s, color 0.5s, transform 0.5s;
@@ -343,4 +382,96 @@ menuitem > menu > menuitem.hover > menu > menuitem{
   padding-left: 25%;
   margin-bottom: 15%;
 
+}
+
+.anime-name:hover {
+  color: #154360;
+}
+
+.trio {
+  font-size: 30px;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+.searches {
+  text-align: left;
+  padding-left: 16%;
+}
+
+.recommendations_header {
+  font-family: "Helvetica Medium", sans-serif;
+  font-size: var(--text-22);
+  margin-bottom: 2rem;
+}
+
+.recommendation_list {
+  display: flex;
+  flex: 1;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  margin-left: 11%;
+  margin-right: 11%;
+  text-align: center;
+  font-size: 17px;
+}
+
+.new-rec-list {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  text-align: center;
+  font-size: 17px;
+  margin-left: 5%;
+  margin-right: 5%;
+}
+
+.rec-header {
+  text-align: center;
+  padding-bottom: 5%;
+  font-size: 35px;
+}
+
+.nav-link {
+    display: block;
+    font-size: var(--bs-nav-link-font-size);
+    font-weight: var(--bs-nav-link-font-weight);
+    color: var(--bs-nav-link-color);
+    text-decoration: none;
+    transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out;
+}
+
+.feature-text {
+  color: #DBE9FA;
+  
+}
+
+#hot {
+  background-color: #C9DFEC;
+  position: relative;
+  top: -50px;
+  padding-bottom: 150px;
+}
+
+.fix-nav {
+  position: fixed;
+  z-index: 100;
+}
+
+.p-4 {
+  padding-top: 1.5rem!important;
+  padding-bottom: 0!important;
+}
+
+.nav2 {
+  font-size: 15px;
+  font-family: 'Montserrat', sans-serif;
+  text-align: left;
+  color: #f0f8ff;
+  font-weight: lighter;
+}
+
+.my-btn {
+  position: relative;
+  left: 94%;
+  
 }

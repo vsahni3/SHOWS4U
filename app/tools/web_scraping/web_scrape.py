@@ -347,6 +347,7 @@ def scrapeUrlsv2(sites):
                 
                 for j in cur_data:
                     res = clean_name(j)
+                  
                     if res:
                         data.add(res)
             # else:
@@ -361,8 +362,12 @@ def scrapeUrlsv2(sites):
             cursor.execute(f'''SELECT * FROM ANIME WHERE name = "{name}"''')
             cur = cursor.fetchone()
             try:
-
                 final.append((titleize(cur[0]),) + cur[1:])
+                
+                with open(f'app/tools/web_scraping/chosen_anime.txt', 'a') as f:
+
+                    f.write(f'{cur[0]}!|?')
+                    f.close()
             except:
                 print(name)
                 print(data)
@@ -409,3 +414,13 @@ def scrapeUrlsv2(sites):
 #     return total1, total2
 
 
+def give_image(names):
+    conn = sqlite3.connect('titles.db')
+    cursor = conn.cursor()
+    new_data = []
+    for name in names:
+        cursor.execute(f'SELECT name, image, id FROM ANIME WHERE name = "{name}"')
+        data = cursor.fetchone()
+        new_data.append((titleize(data[0]),) + data[1:])
+    conn.close()
+    return new_data

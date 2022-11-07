@@ -3,7 +3,7 @@ body {
   color: var(--white);
   line-height: 1.4;
 
-  background-color: var(--primary);
+  background-color: #3498DB;
 }
 
 input,
@@ -120,22 +120,7 @@ h1 {
   padding: 0 2rem;
 } */
 
-.recommendation_list {
-  display: flex;
-  flex: 1;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  margin-left: 11%;
-  margin-right: 11%;
-  text-align: center;
-  font-size: 17px;
-}
 
-.recommendations_header {
-  font-family: "Helvetica Medium", sans-serif;
-  font-size: var(--text-22);
-  margin-bottom: 2rem;
-}
 
 /* No content - begin */
 .no_content {
@@ -149,3 +134,11 @@ h1 {
 }
 
 /* No content - end */
+
+.nav-queries {
+  font-size: 20px;
+}
+
+.nav-queries:hover {
+  color: black;
+}

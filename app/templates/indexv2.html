@@ -7,14 +7,18 @@
     <link rel="mask-icon" href="{{ base_path }}/images/safari-pinned-tab.svg?v=M44lzPylqQ" 
  color="#000000">
     <title>SHOWS 4U</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
     <link rel="stylesheet" href="{{url_for('static', filename='css/styles.css')}}"/>
     <link rel="icon" href="favicon.ico">
     <script src="https://kit.fontawesome.com/79ede3bb5d.js" crossorigin="anonymous"></script>
     <link href="https://fonts.googleapis.com/css?family=Montserrat|Ubuntu" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+    <link rel="preconnect" href="https://fonts.googleapis.com"> 
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400&family=Ubuntu&display=swap" rel="stylesheet">
 
     <!-- CSS Stylesheets -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
-    <link rel="stylesheet" href="styles.css">
+    
 
     <!-- Font Awesome -->
     <script defer src="https://use.fontawesome.com/releases/v5.0.7/js/all.js"></script>
@@ -30,20 +34,20 @@
         <!-- Nav Bar -->
         <nav class="navbar navbar-expand-lg navbar-dark">
   
-          <a style="font-size: 250%;" class= "fw-light navbar-brand" href="#">Shows4U</a>
+          <a style="font-family: monospace; font-size: 250%;" class= "fw-light navbar-brand" href="#">Shows4U</a>
           <button class="move-btn navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link" href="#">Search&nbspAnime</a>
+                <a class="nav-link" href="#main">Search&nbspAnime</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">Hot&nbspAnime</a>
+                <a class="nav-link" href="#hot">Hot&nbspAnime</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="#">About</a>
+                <a class="nav-link" href="#features">About</a>
               </li>
             </ul>
           </div>
@@ -52,10 +56,10 @@
       </div>
     </section>
 
-    <div class="search">
+    <div id="main" class="search">
       <h1>Find the show that suits U!</h1>
 
-      <form class="main-form" action="/result", method="get">
+      <form class="main-form" action="/result", method="post">
         <div class="form-group">
           <label for="exampleInputEmail1"></label>
           <input type="text" name = "anime_name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter phrase">
@@ -70,35 +74,70 @@
       <center>
         <div class="row small-row">
           <div class="col-md-4">
-            <i class="i-special fa-solid fa-circle-check"></i>
-            <h3>How To Use</h3>
-            <p class='padded-p'>Just enter a phrase and see instant results</p>
+            <i class="i-special fa-4x fa-solid fa-circle-check"></i><br><br>
+            <h3 class="trio">How To Use</h3>
+            <p class='feature-text padded-p'>Enter a phrase and see instant results!</p>
           </div>
   
           <div class="col-md-4">
-            <i class="i-special fa-solid fa-bullseye"></i>
-            <h3>Hot Searches</h3>
-            <p class="padded-p">We have all the dogs, the greatest dogs.</p>
+            
+            <i class="i-special fa-4x fa-solid fa-fire"></i><br><br>
+            <h3 class="trio">Hottest Searches</h3>
+            {% for name in data[0] %}
+
+            <p class='feature-text searches'>{{ name[0] }}. {{ name[1] }}</p>
+            {% endfor %}
           </div>
   
           <div class="col-md-4">
-            <i class="i-special fa-solid fa-heart"></i>
-            <h3>Why Shows4U</h3>
-            <p class="padded-p">The only website that is ultra-personalized for you</p>
+            <i class="i-special fa-4x fa-solid fa-heart"></i><br><br>
+            <h3 class="trio">Why Shows4U</h3>
+            <p class="feature-text padded-p">The only ultra-personalized website</p>
           </div>
   
         </div>
+
+      
   
       </center>
   
-  
+    <br><br><br><br>
     </section>
+
+<br><br>
+      <section id="hot">
+        <br><br>
+         <h3 class="rec-header">Most Popular Recommendations</h3>
+         <div class="new-rec-list">
+      
+           {% for row in data[1]|batch(2) %}
+           <div class="columns">
+            {% for column in row %}
+            {% if column[0]|length > 32 %}
+               {% set class = "padding2"%}
+            {% else %}
+               {% set class = "padding1"%}
+
+            {% endif %}
+            <div class="column">
+               
+                <img class="reg-img" src="{{ column[1] }}"><br>
+                <a class="{{ class }} cust-anime-name" href="https://myanimelist.net/anime/{{ column[2] }}">{{ column[0] }}</a>
+            </div>
+            {% endfor %}
+            </div>
+            
+            {% endfor %}
+          </div>
+         
+        </section>
+       
   
   
   
   
   
-    </section>
+
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
