@@ -378,11 +378,7 @@ menuitem > menu > menuitem.hover > menu > menuitem{
    opacity: 1;
 } */
 
-.filter {
-  padding-left: 25%;
-  margin-bottom: 15%;
 
-}
 
 .anime-name:hover {
   color: #154360;
@@ -419,6 +415,7 @@ menuitem > menu > menuitem.hover > menu > menuitem{
   display: flex;
   flex: 1;
   justify-content: space-between;
+  flex-wrap: wrap;
   text-align: center;
   font-size: 17px;
   margin-left: 5%;
@@ -474,4 +471,28 @@ menuitem > menu > menuitem.hover > menu > menuitem{
   position: relative;
   left: 94%;
   
+}
+.filter {
+  padding-left: 25%;
+  margin-bottom: 8%;
+
+}
+@media screen and (max-width: 700px) {
+  .pls {
+    width: 100%;
+  }
+  body {
+    margin: 0;
+  }
+  .nav {
+    display: grid;
+    padding: 0vw;
+    padding-top: 40px;
+    margin: 0;
+  }
+  .filter {
+    padding: 0vw;
+    width: 20px;
+
+  }
 }
