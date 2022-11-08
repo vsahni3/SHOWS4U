@@ -2,8 +2,8 @@ from re import I
 import requests
 import bs4
 from time import time, sleep
-# from concurrent.futures import as_completed
-# from requests_futures import sessions
+from concurrent.futures import as_completed
+from requests_futures import sessions
 import json
 import sqlite3
 
@@ -200,66 +200,66 @@ list2 = []
 # #     if ':' in anime:
 # #         colon_index = anime.index(':')
 # #         anime_db.add(anime[:colon_index])
-# def scrape_english_animes(start, stop, seen=[]):
-#     seen_new = []
-#     urls = [f'https://myanimelist.net/anime/{i}' for i in range(start, stop+1) if i not in seen]
-#     headers = requests.utils.default_headers()
+def scrape_english_animes(start, stop, seen=[]):
+    seen_new = []
+    urls = [f'https://myanimelist.net/anime/{i}' for i in range(start, stop+1) if i not in seen]
+    headers = requests.utils.default_headers()
 
-#     headers.update(
-#         {
-#             'User-Agent': 'My User Agent 1.0',
-#         }
-#     )
+    headers.update(
+        {
+            'User-Agent': 'My User Agent 1.0',
+        }
+    )
     
     
-#     with sessions.FuturesSession() as session:
+    with sessions.FuturesSession() as session:
         
-#         futures = [session.get(url, headers=headers) for url in urls]
+        futures = [session.get(url, headers=headers) for url in urls]
         
-#         for future in as_completed(futures):
+        for future in as_completed(futures):
             
-#             try:
-#                 resp = future.result()
-#             except:
-#                 continue
+            try:
+                resp = future.result()
+            except:
+                continue
             
 
            
-#             soup = bs4.BeautifulSoup(resp.text, 'lxml')
-#             terms = str(soup.select('head')[0])
-#             if "{action: 'submit'}" in terms:
-#                 print('TRY AGAIN')
-#                 print(seen_new)
-#                 break
+            soup = bs4.BeautifulSoup(resp.text, 'lxml')
+            terms = str(soup.select('head')[0])
+            if "{action: 'submit'}" in terms:
+                print('TRY AGAIN')
+                print(seen_new)
+                break
 
-#             seen_new.append(int(resp.url[-5:]))
+            seen_new.append(int(resp.url[-5:]))
 
-#             for i in range(len(terms)):
+            for i in range(len(terms)):
                 
-#                 if terms[i:i+32] == '? Find out more with MyAnimeList' and terms[i-1] == ')':
+                if terms[i:i+32] == '? Find out more with MyAnimeList' and terms[i-1] == ')':
                     
-#                     name = ''
-#                     index = i - 2
+                    name = ''
+                    index = i - 2
                   
-#                     while terms[index] != '(':
-#                         name += terms[index]
-#                         index -= 1
+                    while terms[index] != '(':
+                        name += terms[index]
+                        index -= 1
                     
                     
-#                     name = name[::-1].replace(u'\xa0', u' ').replace(u'&amp;', u'and').replace('&#039;', "'").replace('&quot;', '"').lower()
-#                     name = name.translate(letter_map)
-                    
-
-#                     list2.append(name)
+                    name = name[::-1].replace(u'\xa0', u' ').replace(u'&amp;', u'and').replace('&#039;', "'").replace('&quot;', '"').lower()
+                    name = name.translate(letter_map)
                     
 
-#                     with open(f'app/tools/web_scraping/animes.txt', 'a') as f:
-#                         try:
-#                             f.write(f'{name}|!? ')
-#                         except:
-#                             pass
-#                         f.close()
-#                     break
+                    list2.append(name)
+                    
+
+                    with open(f'app/tools/web_scraping/animes.txt', 'a') as f:
+                        try:
+                            f.write(f'{name}|!? ')
+                        except:
+                            pass
+                        f.close()
+                    break
                    
 
 # scrape_english_animes(37000, 37999)

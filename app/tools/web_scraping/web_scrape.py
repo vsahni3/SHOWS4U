@@ -320,7 +320,7 @@ def scrapeUrls(sites):
 
 def scrapeUrlsv2(sites):
     start = time()
-    data = {'one piece'}
+    data = set()
     headers = requests.utils.default_headers()
 
     headers.update(
@@ -329,29 +329,29 @@ def scrapeUrlsv2(sites):
         }
     )
 
-    # with sessions.FuturesSession() as session:
+    with sessions.FuturesSession() as session:
         
-    #     futures = [session.get(site, headers=headers) for site in sites]
+        futures = [session.get(site, headers=headers) for site in sites]
         
-    #     for future in as_completed(futures):
-    #         try:
-    #             resp = future.result()
-    #         except:
+        for future in as_completed(futures):
+            try:
+                resp = future.result()
+            except:
                 
-    #             continue
-    #         site = str(resp.url)
-    #         soup = bs4.BeautifulSoup(resp.text, 'lxml')
+                continue
+            site = str(resp.url)
+            soup = bs4.BeautifulSoup(resp.text, 'lxml')
             
-    #         cur_data = testing_final(soup, site)
-    #         if cur_data:
+            cur_data = testing_final(soup, site)
+            if cur_data:
                 
-    #             for j in cur_data:
-    #                 res = clean_name(j)
+                for j in cur_data:
+                    res = clean_name(j)
                   
-    #                 if res:
-    #                     data.add(res)
-            # else:
-            #     print(site)
+                    if res:
+                        data.add(res)
+            else:
+                print(site)
         
     final = []
     conn = sqlite3.connect('titles.db')
