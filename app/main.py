@@ -40,7 +40,6 @@ def hello():
     anime_data = web_scrape.give_image(chosen_anime_maxes)
     return render_template('indexv2.html', data=[searches_maxes, anime_data])
 
-
 big_d = [[], []]
 
 
@@ -48,6 +47,7 @@ big_d = [[], []]
 def result():
   # 1. Get the urls from the urls scraper
   if request.method == 'POST':
+
     search = request.form['anime_name']
     with open(f'app/tools/web_scraping/searches.txt', 'a') as f:
                 
