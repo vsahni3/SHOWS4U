@@ -18,6 +18,12 @@
       rel="stylesheet"
       href="{{url_for('static', filename='css/styles.css')}}"
       />
+      <link href="https://fonts.googleapis.com/css?family=Montserrat|Ubuntu" rel="stylesheet">
+      <link rel="preconnect" href="https://fonts.googleapis.com"> 
+      <link rel="preconnect" href="https://fonts.googleapis.com"> 
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin> 
+      <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;400&family=Ubuntu&display=swap" rel="stylesheet">
+
       
      
    <body>
@@ -40,8 +46,8 @@
 <div class="pls">
 <nav class="nav">
     <menu class="filter">
-      <menuitem id="demo1">
-        <a>Filter by Genre</a>
+      <menuitem class="demo" id="demo1">
+        <a class="spec-genre">Genre</a>
         <menu>
         
          <menuitem>
@@ -58,8 +64,8 @@
 
         </menu>
       </menuitem>
-      <menuitem id="demo1">
-      <a>Filter by Age Group</a>
+      <menuitem class="demo" id="demo2">
+      <a class="spec-genre">Age Group</a>
       <menu>
         <menuitem><a class="pgthirteen genre">PG-13</a></menuitem>
         <menuitem><a class="rplus genre">R+</a></menuitem>
@@ -68,8 +74,8 @@
 
       </menu>
     </menuitem>
-    <menuitem id="demo1">
-      <a>Filter by Release Year</a>
+    <menuitem class="demo" id="demo3">
+      <a class="spec-genre">Release Year</a>
       <menu>
         <menuitem><a class="yearone genre">2018-Current</a></menuitem>
              <menuitem>

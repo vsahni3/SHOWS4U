@@ -405,8 +405,8 @@ menuitem > menu > menuitem.hover > menu > menuitem{
   flex: 1;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin-left: 11%;
-  margin-right: 11%;
+  margin-left: 8%;
+  margin-right: 8%;
   text-align: center;
   font-size: 17px;
 }
@@ -477,7 +477,67 @@ menuitem > menu > menuitem.hover > menu > menuitem{
   margin-bottom: 8%;
 
 }
+
+.genre {
+  text-decoration: none;
+  font-family: 'Ubuntu';
+  font-size: 18px;
+}
+
+.spec-genre {
+  text-decoration: none;
+
+  font-size: 18px;
+}
+@media screen and (max-width: 991px) {
+  .recommendation_list {
+    padding-left: 12%;
+    width: 260px;
+  }
+  .demo {
+    width: 0;
+    padding-right: 140px;
+    padding-left: 7vw;
+
+  }
+  .my-btn {
+    position: relative;
+    left: 90%
+  }
+  .pls {
+    width: 100%;
+  }
+  body {
+    margin: 0;
+  }
+  .nav {
+    display: grid;
+    padding: 0vw;
+    padding-top: 40px;
+    margin: 0;
+  }
+  .filter {
+    padding: 0vw;
+    width: 20px;
+    padding-left: 7%;
+
+  }
+}
+
 @media screen and (max-width: 700px) {
+  .recommendation_list {
+    padding-left: 9%;
+  }
+  .demo {
+    width: 0;
+    padding-right: 140px;
+    padding-left: 7vw;
+
+  }
+  .my-btn {
+    position: relative;
+    left: 90%
+  }
   .pls {
     width: 100%;
   }
@@ -496,3 +556,39 @@ menuitem > menu > menuitem.hover > menu > menuitem{
 
   }
 }
+
+
+
+@media screen and (max-width: 500px) {
+  .recommendation_list {
+    padding-left: 7%;
+  }
+  .demo {
+    width: 0;
+    padding-right: 140px;
+    padding-left: 1.5vw;
+
+  }
+  .my-btn {
+    position: relative;
+    left: 90%
+  }
+  .pls {
+    width: 100%;
+  }
+  body {
+    margin: 0;
+  }
+  .nav {
+    display: grid;
+    padding: 0vw;
+    padding-top: 40px;
+    margin: 0;
+  }
+  .filter {
+    padding: 0vw;
+    width: 20px;
+
+  }
+}
+
