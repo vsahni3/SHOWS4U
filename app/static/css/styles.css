@@ -588,3 +588,10 @@ menuitem > menu > menuitem.hover > menu > menuitem{
   }
 }
 
+
+@media (max-width: 450px) {
+  .my-btn {
+    position: relative;
+    left: 84%
+  }
+}
