@@ -489,6 +489,7 @@ menuitem > menu > menuitem.hover > menu > menuitem{
 
   font-size: 18px;
 }
+
 @media screen and (max-width: 991px) {
   .recommendation_list {
     padding-left: 12%;
@@ -511,7 +512,6 @@ menuitem > menu > menuitem.hover > menu > menuitem{
     margin: 0;
   }
   .nav {
-    display: grid;
     padding: 0vw;
     padding-top: 40px;
     margin: 0;
@@ -531,7 +531,7 @@ menuitem > menu > menuitem.hover > menu > menuitem{
   .demo {
     width: 0;
     padding-right: 140px;
-    padding-left: 7vw;
+    padding-left: 5vw;
 
   }
   .my-btn {
@@ -545,7 +545,6 @@ menuitem > menu > menuitem.hover > menu > menuitem{
     margin: 0;
   }
   .nav {
-    display: grid;
     padding: 0vw;
     padding-top: 40px;
     margin: 0;
@@ -557,9 +556,7 @@ menuitem > menu > menuitem.hover > menu > menuitem{
   }
 }
 
-
-
-@media screen and (max-width: 500px) {
+@media (max-width: 500px) {
   .recommendation_list {
     padding-left: 7%;
   }
@@ -580,7 +577,6 @@ menuitem > menu > menuitem.hover > menu > menuitem{
     margin: 0;
   }
   .nav {
-    display: grid;
     padding: 0vw;
     padding-top: 40px;
     margin: 0;
