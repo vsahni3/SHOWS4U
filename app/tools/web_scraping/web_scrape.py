@@ -361,7 +361,6 @@ def scrapeUrlsv2(sites):
     for name in data:
         cursor.execute(f'''SELECT * FROM ANIME WHERE name = "{name}"''')
         cur = cursor.fetchone()
-        print(cur)
         try:
             final.append((titleize(cur[0]),) + cur[1:])
             
@@ -370,9 +369,10 @@ def scrapeUrlsv2(sites):
                 f.write(f'{cur[0]}!|?')
                 f.close()
         except:
-            print(name)
-            print(data)
-    print(time() - start, 10 * '\n')
+            pass
+            # print(name)
+            # print(data)
+    # print(time() - start, 10 * '\n')
     return final
 
 # def scrapeUrls(sites):

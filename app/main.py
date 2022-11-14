@@ -49,6 +49,9 @@ def result():
   if request.method == 'POST':
 
     search = request.form['anime_name']
+    if 'anime' not in search.lower():
+      search = 'anime ' + search
+    print(search)
     with open(f'app/tools/web_scraping/searches.txt', 'a') as f:
                 
         f.write(f'{search}!|?')
@@ -60,11 +63,11 @@ def result():
     data = web_scrape.scrapeUrlsv2(urls)
     big_d[0] = data
     big_d[1] = data
+    print(len([entry[0] for entry in data]))
 
   else:
     data = big_d[0]
     big_d[1] = data
-
 
   # 3. Send data back and render it.
   return render_template('queries.html', data=data)
@@ -85,6 +88,7 @@ def filters(name):
     mapped_val = mapper[name]
     filtered_data = [anime for anime in data if mapped_val == anime[5]]
   else:
+
     lower_limit = int(name.split('-')[0])
     if 'current' in name:
       upper_limit = 2030
@@ -92,7 +96,6 @@ def filters(name):
       upper_limit = int(name.split('-')[1])
     filtered_data = [anime for anime in data if anime[3].isdigit() and lower_limit <= int(anime[3]) <= upper_limit]
   big_d[1] = filtered_data
-  print([entry[0] for entry in filtered_data])
   return render_template('queries.html', data=filtered_data)
   
 if __name__ == '__main__':
