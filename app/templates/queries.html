@@ -101,20 +101,17 @@
               {% if data %}
               {% if 3 > data|length %}
                   {% set batch_size = 1%}
-              {% elif 12 > data|length %}
-                  {% if data|length % 3 == 0 %}
-                     {% set batch_size = data|length // 3%}
-                  {% else %}
-                     {% set batch_size = data|length // 3 + 1%}
-                  {% endif %}
-                     
-               {% else %}
-                  {% set batch_size = 4%}
+              {% elif data|length % 3 == 0 %}
+                  {% set batch_size = data|length // 3%}
+              {% else %}
+                  {% set batch_size = data|length // 3 + 1%}
                
               {% endif %}
-              {% for row in data[:12]|batch(batch_size) %}
+              {% for row in data|batch(batch_size) %}
               <div class="columns">
                {% for column in row %}
+              
+              
                {% if column[6]|length == 0 %}
                   {% set class = "padding3"%}
                {% elif column[0]|length > 29 %}

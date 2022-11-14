@@ -2,7 +2,7 @@ from flask import Flask, render_template, request
 from .tools.web_scraping import get_urls
 from .tools.web_scraping import web_scrape
 from time import time
-
+from math import ceil
 
 app = Flask(__name__)
 
@@ -28,6 +28,21 @@ def calc_maxes(data, num_maxes):
             break
   return maxes
 
+
+def sort_data(data):
+  if len(data) <= 3:
+    return data
+  else: 
+    num_rows = ceil(len(data) / 3)
+    num_cols = ceil(len(data) / num_rows)
+    new_data = []
+    for i in range(num_cols):
+      for j in range(num_rows):
+        if i + j * num_cols < len(data):
+          new_data.append(data[i + j * num_cols])
+    if len(new_data) != len(data):
+      return data
+    return new_data
 
 
 @app.route("/")
@@ -61,16 +76,17 @@ def result():
     # 2. Using the urls to scrape data, and get the data back.
     
     data = web_scrape.scrapeUrlsv2(urls)
+    data.sort(key=lambda x: x[6], reverse=True)
+
     big_d[0] = data
     big_d[1] = data
-    print(len([entry[0] for entry in data]))
 
   else:
     data = big_d[0]
     big_d[1] = data
 
   # 3. Send data back and render it.
-  return render_template('queries.html', data=data)
+  return render_template('queries.html', data=sort_data(data[:12]))
 
 
 @app.route("/filter/<name>")
@@ -96,7 +112,7 @@ def filters(name):
       upper_limit = int(name.split('-')[1])
     filtered_data = [anime for anime in data if anime[3].isdigit() and lower_limit <= int(anime[3]) <= upper_limit]
   big_d[1] = filtered_data
-  return render_template('queries.html', data=filtered_data)
+  return render_template('queries.html', data=sort_data(filtered_data[:12]))
   
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support

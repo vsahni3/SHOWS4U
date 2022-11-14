@@ -232,7 +232,7 @@ a {
 .anime-name {
   padding-left: 10px;
   display: block;
-  width: 32ch;
+  width: 28ch;
   overflow: hidden;
   text-align: center;
   text-overflow: ellipsis;
