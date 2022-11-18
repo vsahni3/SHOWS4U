@@ -5,7 +5,8 @@ from time import time
 from math import ceil
 
 app = Flask(__name__)
-
+# uss css media queries and class_name depending on the image number
+# eg i=0, i=1 -> class column1 column2, etc
 
 def calc_maxes(data, num_maxes):
   mapper = {}

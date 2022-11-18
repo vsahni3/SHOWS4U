@@ -61,3 +61,36 @@ def year_filterv2(data, lower_bound, upper_bound):
 
 def match_year_tvshows(lower_bound, upper_bound, results):
     return base_filterv2(results, 'Series', year_filterv2, lower_bound, upper_bound)
+
+
+
+import matplotlib.pyplot as plt
+points = [-0.015625, -0.0078125]
+start = 1
+for i in range(1000):
+    diff = (points[-1] - points[-2]) / 2
+    points.append(points[-1] + diff)
+    
+
+
+new_points = [-1 * x for x in points]
+# points = list(points) + new_points[::-1]
+y = [0.015625]
+
+# print(max(points), min(points))
+
+newx = []
+for i in range(1, len(points)):
+    if i % 2 == 0:
+        y.append(points[i] * -1)
+    else:
+        y.append(y[-1])
+
+new_points = [-1 * x for x in points]
+new_y = [-1 * x for x in y]
+points += new_points[::-1]
+y += new_y[::-1]
+print(points)
+print(y)
+plt.plot(points, y)
+plt.show()

@@ -1101,7 +1101,7 @@ def sqlite_mal(start:str, stop:str):
 
 # conn = sqlite3.connect('titles.db')
 # cursor = conn.cursor()
-# name = 'Seven Mortal Sins: This is Indeed the Work of Demons...'.lower()
+# name = input().lower()
 # cursor.execute(f'''SELECT * FROM ANIME WHERE name LIKE"{name}"''')
 # data = cursor.fetchall()
 # print(data)
@@ -1110,7 +1110,7 @@ def update_anime(name, type, change):
     cursor = conn.cursor()
     cursor.execute(f'UPDATE anime SET "{type}" = "{change}" WHERE name = "{name}"')
     conn.commit()
-
+# update_anime('My Next Life as a Villainess: All Routes Lead to Doom!'.lower(), 'image', 'https://cdn.myanimelist.net/images/anime/1483/107061.jpg')
 
 # for i in data:
 #     if not i[3].isdigit():
