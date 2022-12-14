@@ -1177,6 +1177,8 @@ conn = sqlite3.connect('titles.db')
 
 cursor = conn.cursor()
 
+cursor.execute('''CREATE TABLE IF NOT EXISTS ANIME_FULL(name TEXT PRIMARY KEY, image TEXT, duration TEXT, year TEXT, genres TEXT, age_rating TEXT, rating TEXT, id TEXT)''')
+cursor.execute('''CREATE TABLE IF NOT EXISTS ANIME_FILTERED(name TEXT PRIMARY KEY, image TEXT, duration TEXT, year TEXT, genres TEXT, age_rating TEXT, rating TEXT, id TEXT)''')
 cursor.execute('''CREATE TABLE IF NOT EXISTS ANIME(name TEXT PRIMARY KEY, image TEXT, duration TEXT, year TEXT, genres TEXT, age_rating TEXT, rating TEXT, id TEXT)''')
 # cursor.execute('DELETE FROM ANIME WHERE name = "tokyo revengers"')
 
@@ -1242,12 +1244,12 @@ def sqlite_mal(start:str, stop:str):
 #     print(num)
 #     sleep(300)
 
-conn = sqlite3.connect('titles.db')
-cursor = conn.cursor()
-name = 'rent-a-girlfriend'.lower()
-cursor.execute(f'''SELECT * FROM ANIME WHERE name LIKE"{name}"''')
-data = cursor.fetchall()
-print(data)
+# conn = sqlite3.connect('titles.db')
+# cursor = conn.cursor()
+# name = 'rent-a-girlfriend'.lower()
+# cursor.execute(f'''SELECT * FROM ANIME WHERE name LIKE"{name}"''')
+# data = cursor.fetchall()
+# print(data)
 def update_anime(name, type, change):
     conn = sqlite3.connect('titles.db')
     cursor = conn.cursor()

@@ -3,10 +3,17 @@ from .tools.web_scraping import get_urls
 from .tools.web_scraping import web_scrape
 from time import time
 from math import ceil
-
+import sqlite3
 app = Flask(__name__)
 # uss css media queries and class_name depending on the image number
 # eg i=0, i=1 -> class column1 column2, etc
+conn = sqlite3.connect('titles.db')
+
+cursor = conn.cursor()
+cursor.execute("""DROP TABLE IF EXISTS ANIME_FILTERED""")
+cursor.execute("""DROP TABLE IF EXISTS ANIME_FULL""")
+cursor.execute('''CREATE TABLE IF NOT EXISTS ANIME_FULL(name TEXT PRIMARY KEY, image TEXT, duration TEXT, year TEXT, genres TEXT, age_rating TEXT, rating TEXT, id TEXT)''')
+cursor.execute('''CREATE TABLE IF NOT EXISTS ANIME_FILTERED(name TEXT PRIMARY KEY, image TEXT, duration TEXT, year TEXT, genres TEXT, age_rating TEXT, rating TEXT, id TEXT)''')
 
 def calc_maxes(data, num_maxes):
   mapper = {}
@@ -56,8 +63,7 @@ def hello():
     anime_data = web_scrape.give_image(chosen_anime_maxes)
     return render_template('indexv2.html', data=[searches_maxes, anime_data])
 
-og_data = [None]
-filtered_data = [None]
+
 
 
 @app.route("/result", methods=["POST", "GET"])
@@ -78,12 +84,25 @@ def result():
     
     data = web_scrape.scrapeUrlsv2(urls)
     data.sort(key=lambda x: x[6], reverse=True)
-    og_data[0] = [i for i in data]
-    filtered_data[0] = [i for i in data]
+    conn = sqlite3.connect('titles.db')
+    cursor = conn.cursor()
+    for i in data:
+      cursor.execute(f'''INSERT INTO ANIME_FULL VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}", "{i[4]}", "{i[5]}", "{i[6]}", "{i[7]}")''')
+      cursor.execute(f'''INSERT INTO ANIME_FILTERED VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}", "{i[4]}", "{i[5]}", "{i[6]}", "{i[7]}")''')
+    conn.commit()
+
+
 
   else:
-    data = og_data[0]
-    filtered_data[0] = [i for i in data]
+    conn = sqlite3.connect('titles.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM ANIME_FULL")
+    data = cursor.fetchall()
+    cursor.execute("DELETE FROM ANIME_FILTERED")
+    for i in data:
+      cursor.execute(f'''INSERT INTO ANIME_FILTERED VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}", "{i[4]}", "{i[5]}", "{i[6]}", "{i[7]}", )''')
+    conn.commit()
+
 
   # 3. Send data back and render it.
   return render_template('queries.html', data=sort_data(data))
@@ -91,7 +110,10 @@ def result():
 
 @app.route("/filter/<name>")
 def filters(name):
-  data = filtered_data[0]
+  conn = sqlite3.connect('titles.db')
+  cursor = conn.cursor()
+  cursor.execute("SELECT * FROM ANIME_FULL")
+  data = cursor.fetchall()
   if name in ['shounen', 'seinen', 'action', 'adventure', 'romance', 'isekai']:
     filter_data = [anime for anime in data if name.title() in anime[4].split('!?|')]
   elif name in ['pg-13', 'r', 'r+', 'pg']:
@@ -111,8 +133,10 @@ def filters(name):
     else:
       upper_limit = int(name.split('-')[1])
     filter_data = [anime for anime in data if anime[3].isdigit() and lower_limit <= int(anime[3]) <= upper_limit]
-  filtered_data[0] = filter_data
-  return render_template('queries.html', data=sort_data(filtered_data[0][:12]))
+  cursor.execute("DELETE FROM ANIME_FILTERED")
+  for i in filter_data:
+    cursor.execute(f'''INSERT INTO ANIME_FILTERED VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}", "{i[4]}", "{i[5]}", "{i[6]}", "{i[7]}")''')
+  return render_template('queries.html', data=sort_data(filter_data[:12]))
   
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
