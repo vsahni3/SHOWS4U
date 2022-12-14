@@ -56,7 +56,8 @@ def hello():
     anime_data = web_scrape.give_image(chosen_anime_maxes)
     return render_template('indexv2.html', data=[searches_maxes, anime_data])
 
-big_d = [[], []]
+og_data = [None]
+filtered_data = [None]
 
 
 @app.route("/result", methods=["POST", "GET"])
@@ -77,14 +78,12 @@ def result():
     
     data = web_scrape.scrapeUrlsv2(urls)
     data.sort(key=lambda x: x[6], reverse=True)
-
-    big_d[0] = data
-    big_d[1] = data
+    og_data[0] = [i for i in data]
+    filtered_data[0] = [i for i in data]
 
   else:
-    # aliases
-    data = big_d[0]
-    big_d[1] = data
+    data = og_data[0]
+    filtered_data[0] = [i for i in data]
 
   # 3. Send data back and render it.
   return render_template('queries.html', data=sort_data(data))
@@ -92,9 +91,9 @@ def result():
 
 @app.route("/filter/<name>")
 def filters(name):
-  data = big_d[1]
+  data = filtered_data[0]
   if name in ['shounen', 'seinen', 'action', 'adventure', 'romance', 'isekai']:
-    filtered_data = [anime for anime in data if name.title() in anime[4].split('!?|')]
+    filter_data = [anime for anime in data if name.title() in anime[4].split('!?|')]
   elif name in ['pg-13', 'r', 'r+', 'pg']:
     mapper = {
       'pg-13': 'PG-13 - Teens 13 or older',
@@ -103,7 +102,7 @@ def filters(name):
       'pg': 'PG - Children'
     }
     mapped_val = mapper[name]
-    filtered_data = [anime for anime in data if mapped_val == anime[5]]
+    filter_data = [anime for anime in data if mapped_val == anime[5]]
   else:
 
     lower_limit = int(name.split('-')[0])
@@ -111,9 +110,9 @@ def filters(name):
       upper_limit = 2030
     else:
       upper_limit = int(name.split('-')[1])
-    filtered_data = [anime for anime in data if anime[3].isdigit() and lower_limit <= int(anime[3]) <= upper_limit]
-  big_d[1] = filtered_data
-  return render_template('queries.html', data=sort_data(filtered_data[:12]))
+    filter_data = [anime for anime in data if anime[3].isdigit() and lower_limit <= int(anime[3]) <= upper_limit]
+  filtered_data[0] = filter_data
+  return render_template('queries.html', data=sort_data(filtered_data[0][:12]))
   
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support

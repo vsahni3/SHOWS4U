@@ -1,6 +1,6 @@
-import web_scrape
-from get_urls import method2
-from time import time
+# import web_scrape
+# from get_urls import method2
+# from time import time
 
 
 # movie_queries = [['horror', 'action', 'romance', 'alien', 'fantasy'] * 5, 'movies']
@@ -47,18 +47,18 @@ anime_queries = [['science fell in love'], 'anime']
 tvshow_queries = [['bitersweet ending', 'happy ending', 'love triangle', 'high school'], 'tv shows']
 big = [anime_queries]
 
-initial = time()
-for i in big:
-    key_word = i[1]
-    for query in i[0]:
-        start = time()
-        urls = method2(f'anime sweet mc')
+# initial = time()
+# for i in big:
+#     key_word = i[1]
+#     for query in i[0]:
+#         start = time()
+#         urls = method2(f'anime sweet mc')
 
-        print(urls)
-        data = web_scrape.scrapeUrlsv2(urls)
+#         print(urls)
+#         data = web_scrape.scrapeUrlsv2(urls)
 
-        print(time() - start, '\n\n')
+#         print(time() - start, '\n\n')
 
-        print(data, '\n\n')
+#         print(data, '\n\n')
 
 

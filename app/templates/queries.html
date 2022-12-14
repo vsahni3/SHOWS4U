@@ -144,7 +144,7 @@ var elems = document.querySelectorAll('.genre')
 for (var i = 0; i < elems.length; i++) {
   elems[i].addEventListener('click', function() {
     var btn = this.innerHTML
-    window.location.href = '/'
+    window.location.href = '/filter/'.concat(btn.toLowerCase())
 })
 
 }
