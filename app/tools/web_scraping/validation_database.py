@@ -6,7 +6,7 @@ from concurrent.futures import as_completed
 from requests_futures import sessions
 import json
 import sqlite3
-
+import time
 
 letter_map = {224: 97, 225: 97, 226: 97, 227: 97, 228: 97, 229: 97, 231: 99, 232: 101, 233: 101, 234: 101, 235: 101, 236: 105, 237: 105, 238: 105, 239: 105, 240: 111, 241: 110, 242: 111, 243: 111, 244: 111, 245: 111, 246: 111, 248: 111, 249: 117, 250: 117, 251: 117, 252: 117, 253: 121, 255: 121}
 
@@ -861,7 +861,7 @@ def retrieve_info(content, id):
     title = soup.find('title').get_text()
     if 'Page Not Found' in title:
         return 
-    info['name'] = title[:title.index(' ')]
+    info['name'] = title[:title.index('(') - 1]
     year_text = title[title.index('(')+1:title.index(')')]
     if 'TV Series' in year_text:
         if '-' in year_text:
@@ -870,9 +870,11 @@ def retrieve_info(content, id):
             info['year'] = year_text[year_text.rindex('s')+2:]
     else:
         info['year'] = year_text
-    genres = soup.find_all("span", {"class": "genres"})[0].get_text().replace('\xa0', ' ').strip().split(', ')
-    for genre in genres:
-        info['genres'] += f'{genre}!?|'
+    genres = soup.find_all("span", {"class": "genres"})
+    if genres:
+        genres = genres[0].get_text().replace('\xa0', ' ').strip().split(', ')
+        for genre in genres:
+            info['genres'] += f'{genre}!?|'
     images = soup.find_all("img", {"class": "poster"})
     
     if len(images) >= 2:
@@ -882,48 +884,42 @@ def retrieve_info(content, id):
     
         info['image url'] = 'https://image.tmdb.org' + image[image.index('src')+5:image.index('jpg')+3]
     
-    age_rating = soup.find_all("span", {"class": "certification"})[0].get_text().strip()
-    info['age rating'] = age_rating
-
-    duration = soup.find_all("span", {"class": "runtime"})[0].get_text().strip()
-   
-    if 'h' in duration:
-        if 'm' in duration:
-            duration = str(int(duration[0]) * 60 + int(duration[3:5]))
+    age_rating = soup.find_all("span", {"class": "certification"})
+    if age_rating:
+        age_rating = age_rating[0].get_text().strip()
+        info['age rating'] = age_rating
+    duration = soup.find_all("span", {"class": "runtime"})
+    if duration:
+        duration = duration[0].get_text().strip()
+        if 'h' in duration:
+            if 'm' in duration:
+                duration = str(int(duration[0]) * 60 + int(duration[3:duration.index('m')]))
+            else:
+                duration = str(int(duration[0]) * 60)
         else:
-            duration = str(int(duration[0]) * 60)
-    else:
-        duration = duration[:2]
-    info['duration'] = duration
+            duration = duration[:2]
+        info['duration'] = duration
 
-    rating = str(soup.find_all("div", {"class": "percent"})[0])
-    i = 0
-    while rating[i:i+6] != 'icon-r':
-        i += 1
-    if len(rating[i+6:i+8]) == 2:
+    rating = soup.find_all("div", {"class": "percent"})
+    
+    if rating:
+        rating = str(rating[0])
+        i = 0
+        while rating[i:i+6] != 'icon-r':
+            i += 1
+        i += 6
+        while rating[i].isdigit():
+            info['rating'] += rating[i]
+            i += 1
 
-        rating = rating[i+6:i+8]
-    else:
-        rating = rating[i+6]
-    info['rating'] = rating
-
-    if info != {
-    'name': '',
-    'genres': '',
-    'year': '',
-    'image url' : '',
-    'age rating': '',
-    'duration': '',
-    'rating': '',
-    'url': id
-    }:
+    if info['image url'] != '':
         return info
 
-def scrape_tmdb_multi(start, stop):
-    urls = [f'https://www.themoviedb.org/tv/{i}' for i in range(start, stop+1)]
-    urls += [f'https://www.themoviedb.org/movie/{i}' for i in range(start, stop+1)]
+def scrape_tmdb_multi(start, stop, type):
+    conn = sqlite3.connect('titles.db')
+    cursor = conn.cursor()
+    urls = [f'https://www.themoviedb.org/{type}/{i}' for i in range(start, stop+1)]
     headers = requests.utils.default_headers()
-    big_info = []
     headers.update(
         {
             'User-Agent': 'My User Agent 1.0',
@@ -952,43 +948,69 @@ def scrape_tmdb_multi(start, stop):
                 i += 1
             info = retrieve_info(resp.content, id)
             if info:
-                big_info.append(info)
-    return big_info
-            
-        
+                if type == 'movie':
+                    table = 'MOVIES'
+                else:
+                    table = 'TV'
+                
+                try:
+                    cursor.execute(f'''INSERT INTO {table} VALUES ("{info['name']}", "{info['genres']}", "{info['year']}", "{info['image url']}", "{info['age rating']}", "{info['duration']}", "{info['rating']}", "{info['url']}")''')
+                except:
+                    
+                    print(id)
+                conn.commit()
+def del_table():
+    conn = sqlite3.connect('titles.db')
+    cursor = conn.cursor()
+    cursor.execute('DELETE FROM MOVIES')
+    conn.commit()
 
+# del_table()
+# scrape_tmdb_multi(101, 10000, 'movie')
+# conn = sqlite3.connect('titles.db')
+# cursor = conn.cursor()
+# cursor.execute('SELECT * FROM MOVIES')
+# print(len(cursor.fetchall()))
 
-
-def scrape_tmdb_single(id):
-    url1 = f'https://www.themoviedb.org/tv/{id}'
-    url2 = f'https://www.themoviedb.org/movie/{id}'
+def scrape_tmdb_single(id, type):
+    url1 = f'https://www.themoviedb.org/{type}/{id}'
     headers = requests.utils.default_headers()
     headers.update(
         {
             'User-Agent': 'My User Agent 1.0',
         }
     )
-    results = []
     try:
-        result1 = requests.get(url1, headers=headers)
-        results.append(result1)
+        result = requests.get(url1, headers=headers)
     except:
         return
-    try:
-        result2 = requests.get(url2, headers=headers) 
-        results.append(result2)
-    except:
-        return
-    big_info = []
-    for result in results:
-        info = retrieve_info(result.content, id)
-        if info:
-            big_info.append(info)
-    if big_info:
-        return big_info
-        
 
-# scrape_tmdb_single('10195')
+    info = retrieve_info(result.content, id)
+    if info:
+        return info
+
+def multi_tmdb_slow(start, stop, type):
+    conn = sqlite3.connect('titles.db')
+    cursor = conn.cursor()
+    
+    for id in range(start, stop):
+        info = scrape_tmdb_single(id, type)
+        if type == 'movie':
+            table = 'MOVIES'
+        else:
+            table = 'TV'
+        if info:
+            try:
+                cursor.execute(f'''INSERT INTO {table} VALUES ("{info['name']}", "{info['genres']}", "{info['year']}", "{info['image url']}", "{info['age rating']}", "{info['duration']}", "{info['rating']}", "{info['url']}")''')
+            except:
+                print(id)
+        conn.commit()
+
+    
+
+# cursor.execute('''CREATE TABLE IF NOT EXISTS MOVIES(name TEXT PRIMARY KEY, genres TEXT, year TEXT, image_url TEXT, age_rating TEXT, duration TEXT, rating TEXT, id TEXT)''')
+# cursor.execute('''CREATE TABLE IF NOT EXISTS TV(name TEXT PRIMARY KEY, genres TEXT, year TEXT, image_url TEXT, age_rating TEXT, duration TEXT, rating TEXT, id TEXT)''')
+
 def full_scrape_mal(num:str):
     url = f'https://myanimelist.net/anime/{num}'
 
@@ -1051,10 +1073,6 @@ def full_scrape_mal(num:str):
                 info['english name'] = info['english name'][::-1].replace(u'\xa0', u' ').replace(u'&amp;', u'and').replace('&#039;', "'").replace('&quot;', '"').translate(letter_map).lower().strip()
         
                     
-                    
-               
-                
-                
         
             # while ' (' != terms[index:index+2] and terms[index:index+6] != '? Find':
             #     info['japanese name'] += terms[index]
@@ -1173,17 +1191,7 @@ def full_scrape_mal(num:str):
         
 
 # print(full_scrape_mal('392'))
-conn = sqlite3.connect('titles.db')
 
-cursor = conn.cursor()
-
-cursor.execute('''CREATE TABLE IF NOT EXISTS ANIME_FULL(name TEXT PRIMARY KEY, image TEXT, duration TEXT, year TEXT, genres TEXT, age_rating TEXT, rating TEXT, id TEXT)''')
-cursor.execute('''CREATE TABLE IF NOT EXISTS ANIME_FILTERED(name TEXT PRIMARY KEY, image TEXT, duration TEXT, year TEXT, genres TEXT, age_rating TEXT, rating TEXT, id TEXT)''')
-cursor.execute('''CREATE TABLE IF NOT EXISTS ANIME(name TEXT PRIMARY KEY, image TEXT, duration TEXT, year TEXT, genres TEXT, age_rating TEXT, rating TEXT, id TEXT)''')
-# cursor.execute('DELETE FROM ANIME WHERE name = "tokyo revengers"')
-
-conn.commit()
-conn.close()
 
 def sqlite_mal(start:str, stop:str):
     conn = sqlite3.connect('titles.db')
@@ -1303,15 +1311,7 @@ def update_anime(name, type, change):
 #         print('bad')
 
 
-    
-# cursor.execute('''CREATE TABLE IF NOT EXISTS COMPANY(id REAL PRIMARY KEY, name TEXT, rating TEXT, duration TEXT, url TEXT, age_rating TEXT, genre1 TEXT, genre2 TEXT, genre3 TEXT, genre4 TEXT)''')
-# for i in range(50000):
-#     cursor.execute(f"INSERT INTO COMPANY VALUES ({i}, 'Paul{i}{i}{i}', '5{i}{i}{i}', '{i}{i}1h33{i}', '{i}{i}12123{i}', '{i}{i}PG-13{i}', '{i}{i}cool{i}', '{i}scary{i}{i}', '{i}nice{i}{i}', '{i}sad{i}{i}')")
-# cursor.execute(f"INSERT INTO COMPANY VALUES (1, 'Paul{i}{i}{i}', '5{i}{i}{i}', '{i}{i}1h33{i}', '{i}{i}12123{i}', '{i}{i}PG-13{i}', '{i}{i}cool{i}', '{i}scary{i}{i}', '{i}nice{i}{i}', '{i}sad{i}{i}')")
 
-# cursor.execute("SELECT * FROM COMPANY WHERE id IN (1, 49999)")
-# data = cursor.fetchall()
-# print(data)
 
     
   

@@ -15,6 +15,7 @@ cursor.execute("""DROP TABLE IF EXISTS ANIME_FULL""")
 cursor.execute('''CREATE TABLE IF NOT EXISTS ANIME_FULL(name TEXT PRIMARY KEY, image TEXT, duration TEXT, year TEXT, genres TEXT, age_rating TEXT, rating TEXT, id TEXT)''')
 cursor.execute('''CREATE TABLE IF NOT EXISTS ANIME_FILTERED(name TEXT PRIMARY KEY, image TEXT, duration TEXT, year TEXT, genres TEXT, age_rating TEXT, rating TEXT, id TEXT)''')
 conn.commit()
+conn.close()
 def calc_maxes(data, num_maxes):
   mapper = {}
   for item in data:
@@ -90,6 +91,7 @@ def result():
       cursor.execute(f'''INSERT INTO ANIME_FULL VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}", "{i[4]}", "{i[5]}", "{i[6]}", "{i[7]}")''')
       cursor.execute(f'''INSERT INTO ANIME_FILTERED VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}", "{i[4]}", "{i[5]}", "{i[6]}", "{i[7]}")''')
     conn.commit()
+    conn.close()
 
 
 
@@ -102,6 +104,7 @@ def result():
     for i in data:
       cursor.execute(f'''INSERT INTO ANIME_FILTERED VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}", "{i[4]}", "{i[5]}", "{i[6]}", "{i[7]}")''')
     conn.commit()
+    conn.close()
 
 
   # 3. Send data back and render it.
@@ -138,6 +141,7 @@ def filters(name):
     cursor.execute(f'''INSERT INTO ANIME_FILTERED VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}", "{i[4]}", "{i[5]}", "{i[6]}", "{i[7]}")''')
   cursor.execute('SELECT * FROM ANIME_FILTERED')
   conn.commit()
+  conn.close()
   return render_template('queries.html', data=sort_data(filter_data[:12]))
   
 if __name__ == '__main__':
