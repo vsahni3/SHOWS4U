@@ -10,8 +10,6 @@ app = Flask(__name__)
 conn = sqlite3.connect('titles.db')
 
 cursor = conn.cursor()
-cursor.execute("""DROP TABLE IF EXISTS ANIME_FILTERED""")
-cursor.execute("""DROP TABLE IF EXISTS ANIME_FULL""")
 cursor.execute('''CREATE TABLE IF NOT EXISTS ANIME_FULL(name TEXT PRIMARY KEY, image TEXT, duration TEXT, year TEXT, genres TEXT, age_rating TEXT, rating TEXT, id TEXT)''')
 cursor.execute('''CREATE TABLE IF NOT EXISTS ANIME_FILTERED(name TEXT PRIMARY KEY, image TEXT, duration TEXT, year TEXT, genres TEXT, age_rating TEXT, rating TEXT, id TEXT)''')
 conn.commit()
@@ -87,6 +85,8 @@ def result():
     data.sort(key=lambda x: x[6], reverse=True)
     conn = sqlite3.connect('titles.db')
     cursor = conn.cursor()
+    cursor.execute("DELETE FROM ANIME_FILTERED")
+    cursor.execute("DELETE FROM ANIME_FULL")
     for i in data:
       try:
         cursor.execute(f'''INSERT INTO ANIME_FULL VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}", "{i[4]}", "{i[5]}", "{i[6]}", "{i[7]}")''')
@@ -150,7 +150,7 @@ def filters(name):
       print(i)
   conn.commit()
   conn.close()
-  return render_template('queries.html', data=sort_data(filter_data[:12]))
+  return render_template('queries.html', data=sort_data(filter_data))
   
 if __name__ == '__main__':
     # Threaded option to enable multiple instances for multiple user access support
