@@ -88,8 +88,11 @@ def result():
     conn = sqlite3.connect('titles.db')
     cursor = conn.cursor()
     for i in data:
-      cursor.execute(f'''INSERT INTO ANIME_FULL VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}", "{i[4]}", "{i[5]}", "{i[6]}", "{i[7]}")''')
-      cursor.execute(f'''INSERT INTO ANIME_FILTERED VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}", "{i[4]}", "{i[5]}", "{i[6]}", "{i[7]}")''')
+      try:
+        cursor.execute(f'''INSERT INTO ANIME_FULL VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}", "{i[4]}", "{i[5]}", "{i[6]}", "{i[7]}")''')
+        cursor.execute(f'''INSERT INTO ANIME_FILTERED VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}", "{i[4]}", "{i[5]}", "{i[6]}", "{i[7]}")''')
+      except:
+        print(i)
     conn.commit()
     conn.close()
 
@@ -102,7 +105,10 @@ def result():
     data = cursor.fetchall()
     cursor.execute("DELETE FROM ANIME_FILTERED")
     for i in data:
-      cursor.execute(f'''INSERT INTO ANIME_FILTERED VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}", "{i[4]}", "{i[5]}", "{i[6]}", "{i[7]}")''')
+      try:
+        cursor.execute(f'''INSERT INTO ANIME_FILTERED VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}", "{i[4]}", "{i[5]}", "{i[6]}", "{i[7]}")''')
+      except:
+        print(i)
     conn.commit()
     conn.close()
 
@@ -138,8 +144,10 @@ def filters(name):
     filter_data = [anime for anime in data if anime[3].isdigit() and lower_limit <= int(anime[3]) <= upper_limit]
   cursor.execute("DELETE FROM ANIME_FILTERED")
   for i in filter_data:
-    cursor.execute(f'''INSERT INTO ANIME_FILTERED VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}", "{i[4]}", "{i[5]}", "{i[6]}", "{i[7]}")''')
-  cursor.execute('SELECT * FROM ANIME_FILTERED')
+    try:
+      cursor.execute(f'''INSERT INTO ANIME_FILTERED VALUES ("{i[0]}", "{i[1]}", "{i[2]}", "{i[3]}", "{i[4]}", "{i[5]}", "{i[6]}", "{i[7]}")''')
+    except:
+      print(i)
   conn.commit()
   conn.close()
   return render_template('queries.html', data=sort_data(filter_data[:12]))
