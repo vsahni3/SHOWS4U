@@ -846,6 +846,149 @@ def remove_trailing_brackets(name):
     
     return name[:idx+1]
 
+def retrieve_info(content, id):
+    info = {
+        'name': '',
+        'genres': '',
+        'year': '',
+        'image url' : '',
+        'age rating': '',
+        'duration': '',
+        'rating': '',
+        'url': id
+        }
+    soup = bs4.BeautifulSoup(content, 'html.parser')
+    title = soup.find('title').get_text()
+    if 'Page Not Found' in title:
+        return 
+    info['name'] = title[:title.index(' ')]
+    year_text = title[title.index('(')+1:title.index(')')]
+    if 'TV Series' in year_text:
+        if '-' in year_text:
+            info['year'] = year_text[year_text.rindex('s')+7:]
+        else:
+            info['year'] = year_text[year_text.rindex('s')+2:]
+    else:
+        info['year'] = year_text
+    genres = soup.find_all("span", {"class": "genres"})[0].get_text().replace('\xa0', ' ').strip().split(', ')
+    for genre in genres:
+        info['genres'] += f'{genre}!?|'
+    images = soup.find_all("img", {"class": "poster"})
+    
+    if len(images) >= 2:
+        image = str(images[-1])
+        if 'poster lazyload' in image:
+            image = str(images[-2])
+    
+        info['image url'] = 'https://image.tmdb.org' + image[image.index('src')+5:image.index('jpg')+3]
+    
+    age_rating = soup.find_all("span", {"class": "certification"})[0].get_text().strip()
+    info['age rating'] = age_rating
+
+    duration = soup.find_all("span", {"class": "runtime"})[0].get_text().strip()
+   
+    if 'h' in duration:
+        if 'm' in duration:
+            duration = str(int(duration[0]) * 60 + int(duration[3:5]))
+        else:
+            duration = str(int(duration[0]) * 60)
+    else:
+        duration = duration[:2]
+    info['duration'] = duration
+
+    rating = str(soup.find_all("div", {"class": "percent"})[0])
+    i = 0
+    while rating[i:i+6] != 'icon-r':
+        i += 1
+    if len(rating[i+6:i+8]) == 2:
+
+        rating = rating[i+6:i+8]
+    else:
+        rating = rating[i+6]
+    info['rating'] = rating
+
+    if info != {
+    'name': '',
+    'genres': '',
+    'year': '',
+    'image url' : '',
+    'age rating': '',
+    'duration': '',
+    'rating': '',
+    'url': id
+    }:
+        return info
+
+def scrape_tmdb_multi(start, stop):
+    urls = [f'https://www.themoviedb.org/tv/{i}' for i in range(start, stop+1)]
+    urls += [f'https://www.themoviedb.org/movie/{i}' for i in range(start, stop+1)]
+    headers = requests.utils.default_headers()
+    big_info = []
+    headers.update(
+        {
+            'User-Agent': 'My User Agent 1.0',
+        }
+    )
+    
+    
+    with sessions.FuturesSession() as session:
+        
+        futures = [session.get(url, headers=headers) for url in urls]
+
+        
+        for future in as_completed(futures):
+            
+            try:
+                resp = future.result()
+            except:
+                continue
+            i = 0
+            cur_url = resp.url
+            while not cur_url[i].isdigit():
+                i += 1
+            id = ''
+            while i < len(cur_url) and cur_url[i].isdigit():
+                id += cur_url[i]
+                i += 1
+            info = retrieve_info(resp.content, id)
+            if info:
+                big_info.append(info)
+    return big_info
+            
+        
+
+
+
+def scrape_tmdb_single(id):
+    url1 = f'https://www.themoviedb.org/tv/{id}'
+    url2 = f'https://www.themoviedb.org/movie/{id}'
+    headers = requests.utils.default_headers()
+    headers.update(
+        {
+            'User-Agent': 'My User Agent 1.0',
+        }
+    )
+    results = []
+    try:
+        result1 = requests.get(url1, headers=headers)
+        results.append(result1)
+    except:
+        return
+    try:
+        result2 = requests.get(url2, headers=headers) 
+        results.append(result2)
+    except:
+        return
+    big_info = []
+    for result in results:
+        info = retrieve_info(result.content, id)
+        if info:
+            big_info.append(info)
+    if big_info:
+        return big_info
+        
+
+# scrape_tmdb_single('10195')
 def full_scrape_mal(num:str):
     url = f'https://myanimelist.net/anime/{num}'
 
@@ -1099,18 +1242,18 @@ def sqlite_mal(start:str, stop:str):
 #     print(num)
 #     sleep(300)
 
-# conn = sqlite3.connect('titles.db')
-# cursor = conn.cursor()
-# name = input().lower()
-# cursor.execute(f'''SELECT * FROM ANIME WHERE name LIKE"{name}"''')
-# data = cursor.fetchall()
-# print(data)
+conn = sqlite3.connect('titles.db')
+cursor = conn.cursor()
+name = 'rent-a-girlfriend'.lower()
+cursor.execute(f'''SELECT * FROM ANIME WHERE name LIKE"{name}"''')
+data = cursor.fetchall()
+print(data)
 def update_anime(name, type, change):
     conn = sqlite3.connect('titles.db')
     cursor = conn.cursor()
     cursor.execute(f'UPDATE anime SET "{type}" = "{change}" WHERE name = "{name}"')
     conn.commit()
-# update_anime('My Next Life as a Villainess: All Routes Lead to Doom!'.lower(), 'image', 'https://cdn.myanimelist.net/images/anime/1483/107061.jpg')
+# update_anime('kanojo, okarishimasu'.lower(), 'image', 'https://cdn.myanimelist.net/images/anime/1584/112955.jpg')
 
 # for i in data:
 #     if not i[3].isdigit():

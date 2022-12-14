@@ -114,7 +114,7 @@
              
                {% if column[6]|length == 0 %}
                   {% set class = "padding3"%}
-               {% elif column[0]|length > 29 %}
+               {% elif column[0]|length > 2 %}
                   {% set class = "padding2"%}
                {% else %}
                   {% set class = "padding1"%}
@@ -144,7 +144,7 @@ var elems = document.querySelectorAll('.genre')
 for (var i = 0; i < elems.length; i++) {
   elems[i].addEventListener('click', function() {
     var btn = this.innerHTML
-    window.location.href = '/filter/'.concat(btn.toLowerCase())
+    window.location.href = '/'
 })
 
 }

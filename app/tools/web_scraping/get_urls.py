@@ -65,7 +65,6 @@ def method2(query):
 
         links = list(set(response.html.absolute_links))
       
-      
         for url in links[:]:
             if url.startswith(to_avoid):
                 links.remove(url)

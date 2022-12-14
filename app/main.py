@@ -67,7 +67,6 @@ def result():
     search = request.form['anime_name']
     if 'anime' not in search.lower():
       search = 'anime ' + search
-    print(search)
     with open(f'app/tools/web_scraping/searches.txt', 'a') as f:
                 
         f.write(f'{search}!|?')
@@ -83,11 +82,12 @@ def result():
     big_d[1] = data
 
   else:
+    # aliases
     data = big_d[0]
     big_d[1] = data
 
   # 3. Send data back and render it.
-  return render_template('queries.html', data=sort_data(data[:12]))
+  return render_template('queries.html', data=sort_data(data))
 
 
 @app.route("/filter/<name>")
