@@ -1,6 +1,6 @@
-# import web_scrape
-# from get_urls import method2
-# from time import time
+import web_scrape
+from get_urls import method2
+from time import time
 
 
 # movie_queries = [['horror', 'action', 'romance', 'alien', 'fantasy'] * 5, 'movies']
@@ -60,5 +60,7 @@ big = [anime_queries]
 #         print(time() - start, '\n\n')
 
 #         print(data, '\n\n')
+
+
 
 

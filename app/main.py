@@ -7,13 +7,7 @@ import sqlite3
 app = Flask(__name__)
 # uss css media queries and class_name depending on the image number
 # eg i=0, i=1 -> class column1 column2, etc
-conn = sqlite3.connect('titles.db')
 
-cursor = conn.cursor()
-cursor.execute('''CREATE TABLE IF NOT EXISTS ANIME_FULL(name TEXT PRIMARY KEY, image TEXT, duration TEXT, year TEXT, genres TEXT, age_rating TEXT, rating TEXT, id TEXT)''')
-cursor.execute('''CREATE TABLE IF NOT EXISTS ANIME_FILTERED(name TEXT PRIMARY KEY, image TEXT, duration TEXT, year TEXT, genres TEXT, age_rating TEXT, rating TEXT, id TEXT)''')
-conn.commit()
-conn.close()
 def calc_maxes(data, num_maxes):
   mapper = {}
   for item in data:
@@ -72,12 +66,13 @@ def result():
 
     search = request.form['anime_name']
     if 'anime' not in search.lower():
-      search = 'anime ' + search
+      search += ' anime'
     with open(f'app/tools/web_scraping/searches.txt', 'a') as f:
                 
         f.write(f'{search}!|?')
         f.close()
     urls = get_urls.method2(f'${search} titles')
+    print(urls)
 
     # 2. Using the urls to scrape data, and get the data back.
     
