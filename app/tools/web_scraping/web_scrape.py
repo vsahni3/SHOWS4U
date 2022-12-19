@@ -5,6 +5,7 @@ from requests_futures import sessions
 from .validation_database import movies_db, anime_db, tvshows_db
 import sqlite3
 from time import time
+
 # exceptions_rough = ['BOFURI: I Don’t Want to Get Hurt, so I’ll Max Out My Defense', 'From the New World', 'Re:Creators', 'Magi: The Labyrinth of Magic', 'Fullmetal Alchemist: Brotherhood', 'Anohana: The Flower We Saw That Day', 'Kimi ni Todoke: From Me to You', 'Real Girl', '3D Kanojo: Real Girl', 'Kaichou wa Maid-sama', "monthly girls' nozaki-kun", 'kaguya-sama: love is war', 'wotakoi: love is hard for otaku', 'gekkan shoujo nozaki-kun', 're:zero − starting life in another world', 'kaguya-sama wa kokurasetai: tensai-tachi no renai zunousen', 're:zero kara hajimeru isekai seikatsu', 'wotaku ni koi wa muzukashii']
 big = set()
 def titleize(name):
@@ -307,6 +308,7 @@ def scrapeUrls(sites):
             soup = bs4.BeautifulSoup(resp.text, 'lxml')
             
             cur_data = testing_final(soup, site)
+            
             if cur_data:
                 
                 for j in cur_data:
@@ -317,6 +319,7 @@ def scrapeUrls(sites):
             #     print(site)
        
         return list(data)
+
 
 def scrapeUrlsv2(sites):
     start = time()

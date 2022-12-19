@@ -1006,7 +1006,7 @@ def multi_tmdb_slow(start, stop, type):
                 print(id)
         conn.commit()
 
-    
+# multi_tmdb_slow(899, 100000, 'movie')
 
 # cursor.execute('''CREATE TABLE IF NOT EXISTS MOVIES(name TEXT PRIMARY KEY, genres TEXT, year TEXT, image_url TEXT, age_rating TEXT, duration TEXT, rating TEXT, id TEXT)''')
 # cursor.execute('''CREATE TABLE IF NOT EXISTS TV(name TEXT PRIMARY KEY, genres TEXT, year TEXT, image_url TEXT, age_rating TEXT, duration TEXT, rating TEXT, id TEXT)''')
@@ -1240,6 +1240,18 @@ def sqlite_mal(start:str, stop:str):
        
         num = str(int(num) + 1)
 
+# sqlite_mal('51818', '53305')
+# import time
+# num = '52059'
+# while int(num) < 53305:
+#     num = sqlite_mal(num, '53305')
+#     time.sleep(300)
+
+# conn = sqlite3.connect('titles.db')
+# cursor = conn.cursor()
+# cursor.execute('SELECT * FROM ANIME')
+# data = cursor.fetchall()
+# print(max(data, key=lambda x: int(x[-1])))
 # print(full_scrape_mal('44167'))  
 
 # CHANGED NAME ALGO FROM 44168 ONWARDS
