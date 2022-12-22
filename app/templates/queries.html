@@ -114,9 +114,12 @@
              
                {% if column[6]|length == 0 %}
                   {% set class = "padding3"%}
-               {% elif column[0]|length > 2 %}
+                {% elif column[0]|length > 42 %}
+                  {% set class = "padding4"%}
+               {% elif column[0]|length > 28 %}
                   {% set class = "padding2"%}
-               {% else %}
+                
+              {% else %}
                   {% set class = "padding1"%}
 
                {% endif %}
